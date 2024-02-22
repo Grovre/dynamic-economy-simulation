@@ -1,9 +1,7 @@
 package github.grovre.markets;
 
 import github.grovre.transactions.Buy;
-import github.grovre.transactions.BuyRequest;
 import github.grovre.transactions.Sale;
-import github.grovre.transactions.SaleRequest;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,8 +12,8 @@ public class Market {
     final MarketProduct product;
     final ArrayList<Buy> closedBuys;
     final ArrayList<Sale> closedSales;
-    final ArrayList<BuyRequest> buyRequests;
-    final ArrayList<SaleRequest> saleRequests;
+    final ArrayList<Buy> buyRequests;
+    final ArrayList<Sale> saleRequests;
 
     public Market(MarketProduct product) {
         this.product = product;
@@ -24,8 +22,6 @@ public class Market {
         buyRequests = new ArrayList<>();
         saleRequests = new ArrayList<>();
     }
-
-
 
     public MarketProduct getProduct() {
         return product;
@@ -39,11 +35,11 @@ public class Market {
         return Collections.unmodifiableList(closedSales);
     }
 
-    public List<BuyRequest> getBuyRequests() {
+    public List<Buy> getBuyRequests() {
         return Collections.unmodifiableList(buyRequests);
     }
 
-    public List<SaleRequest> getSaleRequests() {
+    public List<Sale> getSaleRequests() {
         return Collections.unmodifiableList(saleRequests);
     }
 }

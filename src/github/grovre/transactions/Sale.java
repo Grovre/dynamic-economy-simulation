@@ -1,4 +1,10 @@
 package github.grovre.transactions;
 
-public class Sale {
+import java.util.UUID;
+
+public class Sale extends Transaction {
+
+    public Sale(double amount, UUID id) {
+        super(amount, id);
+    }
 }
