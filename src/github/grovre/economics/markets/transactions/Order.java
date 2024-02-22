@@ -12,7 +12,7 @@ public abstract class Order implements Comparable<Order> {
     private final Instant instant;
     private final int initialQuantity;
     private int remainingQuantity;
-    private double price;
+    private final double price;
 
     public Order(double price, int initialQuantity, Instant instant, UUID id) {
         this.id = id;

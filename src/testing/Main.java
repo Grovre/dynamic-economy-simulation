@@ -2,9 +2,12 @@ package testing;
 
 import github.grovre.economics.Economy;
 import github.grovre.economics.markets.MarketProduct;
+import github.grovre.economics.markets.transactions.BuyOrder;
+import github.grovre.economics.markets.transactions.SellOrder;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.stream.Stream;
 
 public class Main {
 
@@ -33,8 +36,29 @@ public class Main {
             }
 
             var fulfilledOrders = market.updateActiveOrders();
-            for (var o : fulfilledOrders)
-                System.out.println(o);
+
+            System.out.println();
+            var sb = new StringBuilder();
+            for (var o : Stream.concat(market.getActiveBuyOrders().stream(), market.getActiveSellOrders().stream()).toList()) {
+                if (o instanceof BuyOrder bo) {
+                    sb.append("Buy order");
+                } else if (o instanceof SellOrder so) {
+                    sb.append("Sell order");
+                } else {
+                    throw new RuntimeException();
+                }
+
+                sb.append(" { ppi: ").append(o.getPricePerItem())
+                        .append(", remaining quantity: ")
+                        .append(o.getRemainingQuantity())
+                        .append(", instant: ")
+                        .append(o.getInstant())
+                        .append(" } ");
+
+                sb.append('\n');
+
+                System.out.println(sb);
+            }
         }
 
         scanner.close();
