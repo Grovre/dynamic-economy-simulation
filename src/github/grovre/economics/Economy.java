@@ -1,7 +1,7 @@
-package github.grovre;
+package github.grovre.economics;
 
-import github.grovre.markets.Market;
-import github.grovre.markets.MarketProduct;
+import github.grovre.economics.markets.Market;
+import github.grovre.economics.markets.MarketProduct;
 
 import java.util.*;
 

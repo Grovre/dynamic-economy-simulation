@@ -1,4 +1,4 @@
-package github.grovre.transactions;
+package github.grovre.economics.markets.transactions;
 
 import java.time.Instant;
 import java.util.Objects;

@@ -1,8 +1,8 @@
-package github.grovre.markets;
+package github.grovre.economics.markets;
 
-import github.grovre.transactions.BuyOrder;
-import github.grovre.transactions.Order;
-import github.grovre.transactions.SellOrder;
+import github.grovre.economics.markets.transactions.BuyOrder;
+import github.grovre.economics.markets.transactions.Order;
+import github.grovre.economics.markets.transactions.SellOrder;
 
 import java.time.Instant;
 import java.util.*;

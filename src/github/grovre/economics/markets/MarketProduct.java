@@ -1,4 +1,4 @@
-package github.grovre.markets;
+package github.grovre.economics.markets;
 
 import java.io.Serializable;
 import java.util.Objects;

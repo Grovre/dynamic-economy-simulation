@@ -1,7 +1,7 @@
 package testing;
 
-import github.grovre.Economy;
-import github.grovre.markets.MarketProduct;
+import github.grovre.economics.Economy;
+import github.grovre.economics.markets.MarketProduct;
 
 import java.util.ArrayList;
 import java.util.Scanner;
