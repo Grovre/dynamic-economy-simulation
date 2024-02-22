@@ -12,19 +12,19 @@ public abstract class Order implements Comparable<Order> {
     private final Instant instant;
     private final int initialQuantity;
     private int remainingQuantity;
-    private final double price;
+    private final double pricePerItem;
 
-    public Order(double price, int initialQuantity, Instant instant, UUID id) {
+    public Order(double pricePerItem, int initialQuantity, Instant instant, UUID id) {
         this.id = id;
         this.fulfilledOrderInfo = null;
         this.instant = instant;
         this.initialQuantity = initialQuantity;
         this.remainingQuantity = initialQuantity;
-        this.price = price;
+        this.pricePerItem = pricePerItem;
     }
 
-    public Order(double price, int initialQuantity, Instant instant) {
-        this(price, initialQuantity, instant, UUID.randomUUID());
+    public Order(double pricePerItem, int initialQuantity, Instant instant) {
+        this(pricePerItem, initialQuantity, instant, UUID.randomUUID());
     }
 
     public void fulfill(int quantity, Instant when) {
@@ -92,12 +92,8 @@ public abstract class Order implements Comparable<Order> {
         return remainingQuantity;
     }
 
-    public double getPrice() {
-        return price;
-    }
-
     public double getPricePerItem() {
-        return price / initialQuantity;
+        return pricePerItem;
     }
 
     @Override
@@ -125,7 +121,7 @@ public abstract class Order implements Comparable<Order> {
                 ", instant=" + instant +
                 ", initialQuantity=" + initialQuantity +
                 ", remainingQuantity=" + remainingQuantity +
-                ", price=" + price +
+                ", price=" + pricePerItem +
                 '}';
     }
 }
