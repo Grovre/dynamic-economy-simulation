@@ -1,43 +1,46 @@
 package github.grovre.markets;
 
-import github.grovre.transactions.Buy;
-import github.grovre.transactions.Sale;
+import github.grovre.transactions.ClosedPurchase;
+import github.grovre.transactions.ClosedSale;
+import github.grovre.transactions.PendingPurchase;
+import github.grovre.transactions.PendingSale;
 
+import java.time.Instant;
 import java.util.*;
 
 public class Market {
 
     final MarketProduct product;
-    final SortedSet<Buy> closedBuys;
-    final SortedSet<Sale> closedSales;
-    final SortedSet<Buy> buyRequests;
-    final SortedSet<Sale> saleRequests;
+    final SortedSet<ClosedPurchase> closedPurchases;
+    final SortedSet<ClosedSale> closedSales;
+    final SortedSet<PendingPurchase> pendingPurchases;
+    final SortedSet<PendingSale> pendingSales;
 
     public Market(MarketProduct product) {
         this.product = product;
-        closedBuys = new TreeSet<>();
+        closedPurchases = new TreeSet<>();
         closedSales = new TreeSet<>();
-        buyRequests = new TreeSet<>();
-        saleRequests = new TreeSet<>();
+        pendingPurchases = new TreeSet<>();
+        pendingSales = new TreeSet<>();
     }
 
     public MarketProduct getProduct() {
         return product;
     }
 
-    public SortedSet<Buy> getClosedBuys() {
-        return Collections.unmodifiableSortedSet(closedBuys);
+    public SortedSet<ClosedPurchase> getClosedPurchases() {
+        return Collections.unmodifiableSortedSet(closedPurchases);
     }
 
-    public SortedSet<Sale> getClosedSales() {
+    public SortedSet<ClosedSale> getClosedSales() {
         return Collections.unmodifiableSortedSet(closedSales);
     }
 
-    public SortedSet<Buy> getBuyRequests() {
-        return Collections.unmodifiableSortedSet(buyRequests);
+    public SortedSet<PendingPurchase> getPendingPurchases() {
+        return Collections.unmodifiableSortedSet(pendingPurchases);
     }
 
-    public SortedSet<Sale> getSaleRequests() {
-        return Collections.unmodifiableSortedSet(saleRequests);
+    public SortedSet<PendingSale> getPendingSales() {
+        return Collections.unmodifiableSortedSet(pendingSales);
     }
 }

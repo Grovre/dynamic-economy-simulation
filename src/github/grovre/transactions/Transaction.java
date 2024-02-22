@@ -1,18 +1,18 @@
 package github.grovre.transactions;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 
 public class Transaction implements Comparable<Transaction> {
     public final double amount;
     public final UUID id;
-    public final Date date;
+    public final Instant instant;
 
-    public Transaction(double amount, Date date, UUID id) {
+    public Transaction(double amount, Instant instant, UUID id) {
         this.amount = amount;
         this.id = id;
-        this.date = date;
+        this.instant = instant;
     }
 
     @Override
@@ -29,6 +29,6 @@ public class Transaction implements Comparable<Transaction> {
 
     @Override
     public int compareTo(Transaction o) {
-        return Double.compare(amount, o.amount);
+        return instant.compareTo(o.instant);
     }
 }
