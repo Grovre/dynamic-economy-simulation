@@ -5,11 +5,11 @@ import java.util.UUID;
 
 public class SellOrder extends Order {
 
-    public SellOrder(int initialQuantity, Instant instant, UUID id) {
-        super(initialQuantity, instant, id);
+    public SellOrder(double price, int initialQuantity, Instant instant, UUID id) {
+        super(price, initialQuantity, instant, id);
     }
 
-    public SellOrder(int initialQuantity, Instant instant) {
-        super(initialQuantity, instant);
+    public SellOrder(double price, int initialQuantity, Instant instant) {
+        super(price, initialQuantity, instant);
     }
 }

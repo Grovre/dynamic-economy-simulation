@@ -1,27 +1,30 @@
 package github.grovre.transactions;
 
 import java.time.Instant;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-public abstract class Order {
+public abstract class Order implements Comparable<Order> {
 
     private final UUID id;
     private FulfilledOrderInfo fulfilledOrderInfo;
     private final Instant instant;
     private final int initialQuantity;
     private int remainingQuantity;
+    private double price;
 
-    public Order(int initialQuantity, Instant instant, UUID id) {
+    public Order(double price, int initialQuantity, Instant instant, UUID id) {
         this.id = id;
         this.fulfilledOrderInfo = null;
         this.instant = instant;
         this.initialQuantity = initialQuantity;
         this.remainingQuantity = initialQuantity;
+        this.price = price;
     }
 
-    public Order(int initialQuantity, Instant instant) {
-        this(initialQuantity, instant, UUID.randomUUID());
+    public Order(double price, int initialQuantity, Instant instant) {
+        this(price, initialQuantity, instant, UUID.randomUUID());
     }
 
     public void fulfill(int quantity, Instant when) {
@@ -33,6 +36,21 @@ public abstract class Order {
 
         if (remainingQuantity == 0)
             this.fulfilledOrderInfo = new FulfilledOrderInfo(when);
+    }
+
+    public void fulfill(Order other, Instant when) {
+        var maxFulfilledQuantity = Math.min(remainingQuantity, other.remainingQuantity);
+        remainingQuantity -= maxFulfilledQuantity;
+        other.remainingQuantity -= maxFulfilledQuantity;
+
+        assert remainingQuantity >= 0;
+        assert other.remainingQuantity >= 0;
+
+        if (remainingQuantity == 0)
+            fulfilledOrderInfo = new FulfilledOrderInfo(when);
+
+        if (other.remainingQuantity == 0)
+            other.fulfilledOrderInfo = new FulfilledOrderInfo(when);
     }
 
     public UUID getId() {
@@ -72,5 +90,30 @@ public abstract class Order {
 
     public int getRemainingQuantity() {
         return remainingQuantity;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public double getPricePerItem() {
+        return price / initialQuantity;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Order order)) return false;
+        return id == order.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public int compareTo(Order o) {
+        return instant.compareTo(o.instant);
     }
 }
