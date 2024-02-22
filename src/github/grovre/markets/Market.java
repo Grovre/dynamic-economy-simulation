@@ -52,17 +52,16 @@ public class Market {
             if (matchedSellOrder.getPricePerItem() > nextBuyOrder.getPricePerItem())
                 break;
 
-            Order last = activeBuyOrders.removeLast();
-            assert nextBuyOrder == last;
-            last = activeSellOrders.removeLast();
-            assert matchedSellOrder == last;
-
             nextBuyOrder.fulfill(matchedSellOrder, Instant.now());
 
-            if (nextBuyOrder.isFulfilled())
+            if (nextBuyOrder.isFulfilled()) {
                 fulfilledOrders.add(nextBuyOrder);
-            if (matchedSellOrder.isFulfilled())
+                activeBuyOrders.remove(nextBuyOrder);
+            }
+            if (matchedSellOrder.isFulfilled()) {
                 fulfilledOrders.add(matchedSellOrder);
+                activeSellOrders.remove(matchedSellOrder);
+            }
         }
 
         return fulfilledOrders;

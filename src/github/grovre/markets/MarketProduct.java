@@ -1,23 +1,31 @@
 package github.grovre.markets;
 
 import java.io.Serializable;
-import java.util.UUID;
+import java.util.Objects;
 
-public record MarketProduct(String name, UUID id) implements Serializable {
+public class MarketProduct implements Serializable {
+    public final String name;
+
+    public MarketProduct(String name) {
+        this.name = name;
+    }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        
-        if (!(obj instanceof MarketProduct other))
-            return false;
-
-        return id == other.id;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MarketProduct that)) return false;
+        return Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return Objects.hash(name);
+    }
+
+    @Override
+    public String toString() {
+        return "MarketProduct{" +
+                "name='" + name + '\'' +
+                '}';
     }
 }

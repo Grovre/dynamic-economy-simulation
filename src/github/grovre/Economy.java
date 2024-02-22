@@ -1,23 +1,29 @@
 package github.grovre;
 
 import github.grovre.markets.Market;
+import github.grovre.markets.MarketProduct;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
+
 
 public class Economy {
-    final Set<Market> markets;
+    private final HashMap<MarketProduct, Market> markets;
 
     public Economy() {
-        markets = new HashSet<>();
+        markets = new HashMap<>();
     }
 
     public Economy(Market... markets) {
-        this.markets = Arrays.stream(markets).collect(Collectors.toSet());
-        // If Collectors.toSet impl ever changes for any reason
-        assert this.markets instanceof HashSet<Market>
-                : "this.markets not instanceof HashSet<>";
+        this();
+        for (var m : markets)
+            this.markets.put(m.getProduct(), m);
+    }
+
+    public Market getOrCreateMarket(MarketProduct product) {
+        return markets.computeIfAbsent(product, Market::new);
+    }
+
+    public Optional<Market> getMarket(MarketProduct product) {
+        return Optional.ofNullable(markets.get(product));
     }
 }

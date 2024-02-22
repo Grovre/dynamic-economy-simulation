@@ -116,4 +116,16 @@ public abstract class Order implements Comparable<Order> {
     public int compareTo(Order o) {
         return instant.compareTo(o.instant);
     }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", fulfilledOrderInfo=" + fulfilledOrderInfo +
+                ", instant=" + instant +
+                ", initialQuantity=" + initialQuantity +
+                ", remainingQuantity=" + remainingQuantity +
+                ", price=" + price +
+                '}';
+    }
 }
