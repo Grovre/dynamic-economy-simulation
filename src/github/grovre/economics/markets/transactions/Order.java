@@ -1,9 +1,7 @@
 package github.grovre.economics.markets.transactions;
 
 import java.time.Instant;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public abstract class Order implements Comparable<Order> {
 
@@ -13,6 +11,7 @@ public abstract class Order implements Comparable<Order> {
     private final int initialQuantity;
     private int remainingQuantity;
     private final double pricePerItem;
+    private final ArrayList<Transaction> transactions;
 
     public Order(double pricePerItem, int initialQuantity, Instant instant, UUID id) {
         this.id = id;
@@ -21,6 +20,7 @@ public abstract class Order implements Comparable<Order> {
         this.initialQuantity = initialQuantity;
         this.remainingQuantity = initialQuantity;
         this.pricePerItem = pricePerItem;
+        this.transactions = new ArrayList<>();
     }
 
     public Order(double pricePerItem, int initialQuantity, Instant instant) {
@@ -38,7 +38,7 @@ public abstract class Order implements Comparable<Order> {
             this.fulfilledOrderInfo = new FulfilledOrderInfo(when);
     }
 
-    public void fulfill(Order other, Instant when) {
+    public Transaction fulfill(Order other, Instant when) {
         var maxFulfilledQuantity = Math.min(remainingQuantity, other.remainingQuantity);
         remainingQuantity -= maxFulfilledQuantity;
         other.remainingQuantity -= maxFulfilledQuantity;
@@ -51,6 +51,23 @@ public abstract class Order implements Comparable<Order> {
 
         if (other.remainingQuantity == 0)
             other.fulfilledOrderInfo = new FulfilledOrderInfo(when);
+
+        BuyOrder buyOrder;
+        SellOrder sellOrder;
+
+        if (this instanceof BuyOrder) {
+            buyOrder = (BuyOrder) this;
+            sellOrder = (SellOrder) other;
+        } else {
+            buyOrder = (BuyOrder) other;
+            sellOrder = (SellOrder) this;
+        }
+
+        var transaction = new Transaction(buyOrder, sellOrder, maxFulfilledQuantity, sellOrder.getPricePerItem(), when);
+        this.transactions.add(transaction);
+        other.transactions.add(transaction);
+
+        return transaction;
     }
 
     public UUID getId() {
@@ -94,6 +111,10 @@ public abstract class Order implements Comparable<Order> {
 
     public double getPricePerItem() {
         return pricePerItem;
+    }
+
+    public List<Transaction> getTransactions() {
+        return Collections.unmodifiableList(transactions);
     }
 
     @Override
