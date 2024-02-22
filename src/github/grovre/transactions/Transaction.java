@@ -1,15 +1,18 @@
 package github.grovre.transactions;
 
+import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
 public class Transaction implements Comparable<Transaction> {
     public final double amount;
     public final UUID id;
+    public final Date date;
 
-    public Transaction(double amount, UUID id) {
+    public Transaction(double amount, Date date, UUID id) {
         this.amount = amount;
         this.id = id;
+        this.date = date;
     }
 
     @Override
