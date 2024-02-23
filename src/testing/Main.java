@@ -2,8 +2,6 @@ package testing;
 
 import github.grovre.economics.Economy;
 import github.grovre.economics.markets.MarketProduct;
-import github.grovre.economics.markets.transactions.BuyOrder;
-import github.grovre.economics.markets.transactions.SellOrder;
 import github.grovre.economics.markets.transactions.Transaction;
 
 import java.util.ArrayList;
@@ -25,6 +23,7 @@ public class Main {
             line = scanner.nextLine();
             var split = line.split(" ");
             var product = new MarketProduct(split[0]);
+            assert split[1].equals("0") || split[1].equals("1");
             var sale = split[1].equals("1");
             var quantity = Integer.parseInt(split[2]);
             var price = Double.parseDouble(split[3]);
@@ -36,7 +35,7 @@ public class Main {
                 market.placeBuyOrder(quantity, price);
             }
 
-            market.updateActiveOrders();
+            market.updateMarketOrders();
 
             System.out.println("Latest orders:");
             var sb = new StringBuilder();

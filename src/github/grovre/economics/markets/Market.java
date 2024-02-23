@@ -33,7 +33,7 @@ public class Market {
         return order;
     }
 
-    public List<Order> updateActiveOrders() {
+    public List<Order> updateMarketOrders() {
         var fulfilledOrders = new ArrayList<Order>();
 
         if (activeBuyOrders.isEmpty() || activeSellOrders.isEmpty())
