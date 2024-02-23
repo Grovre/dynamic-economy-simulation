@@ -25,14 +25,6 @@ public abstract class Order implements Comparable<Order> {
         this(pricePerItem, initialQuantity, instant, UUID.randomUUID());
     }
 
-    public void fulfill(int quantity, Instant when) {
-        if (quantity > remainingQuantity)
-            throw new ArithmeticException
-                    ("Can't fulfill an order with quantity greater than what's asked for");
-
-        remainingQuantity -= quantity;
-    }
-
     public Transaction fulfill(Order other, Instant when) {
         if (this == other) {
             throw new RuntimeException("An order cannot fulfill itself");
@@ -42,8 +34,8 @@ public abstract class Order implements Comparable<Order> {
         remainingQuantity -= maxFulfilledQuantity;
         other.remainingQuantity -= maxFulfilledQuantity;
 
-        assert remainingQuantity >= 0;
-        assert other.remainingQuantity >= 0;
+        if (remainingQuantity < 0 || other.remainingQuantity < 0)
+            throw new ArithmeticException("Remaining quantity of an order cannot go below 0");
 
         BuyOrder buyOrder;
         SellOrder sellOrder;
