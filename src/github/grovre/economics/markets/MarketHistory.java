@@ -1,6 +1,8 @@
 package github.grovre.economics.markets;
 
+import github.grovre.economics.markets.transactions.BuyOrder;
 import github.grovre.economics.markets.transactions.Order;
+import github.grovre.economics.markets.transactions.SellOrder;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;
@@ -15,7 +17,7 @@ public class MarketHistory {
         return closedOrders;
     }
 
-    public Stream<Order> ordersBetween(@NotNull Instant i1, @NotNull Instant i2) {
+    public static Stream<Order> ordersBetween(Stream<Order> orders, @NotNull Instant i1, @NotNull Instant i2) {
         Instant begin;
         Instant end;
         if (i1.isBefore(i2)) {
@@ -26,10 +28,23 @@ public class MarketHistory {
             end = i1;
         }
 
-        return getClosedOrders().stream()
-                .filter(order -> {
+        return orders.filter(order -> {
                     var when = order.getInstant();
                     return begin.isBefore(when) && when.isBefore(end);
                 });
+    }
+
+    public static double averageBuyOrderPrice(Stream<Order> orders) {
+        return orders.filter(BuyOrder.class::isInstance)
+                .mapToDouble(Order::getPricePerItem)
+                .average()
+                .orElse(0);
+    }
+
+    public static double averageSellOrderPrice(Stream<Order> orders) {
+        return orders.filter(SellOrder.class::isInstance)
+                .mapToDouble(Order::getPricePerItem)
+                .average()
+                .orElse(0);
     }
 }
