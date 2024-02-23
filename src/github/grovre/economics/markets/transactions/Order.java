@@ -39,6 +39,10 @@ public abstract class Order implements Comparable<Order> {
     }
 
     public Transaction fulfill(Order other, Instant when) {
+        if (this == other) {
+            throw new RuntimeException("An order cannot fulfill itself");
+        }
+
         var maxFulfilledQuantity = Math.min(remainingQuantity, other.remainingQuantity);
         remainingQuantity -= maxFulfilledQuantity;
         other.remainingQuantity -= maxFulfilledQuantity;
@@ -134,15 +138,19 @@ public abstract class Order implements Comparable<Order> {
         return instant.compareTo(o.instant);
     }
 
+    public String getOrderType() {
+        return "Order";
+    }
+
     @Override
     public String toString() {
         return "Order{" +
-                "id=" + id +
-                ", fulfilledOrderInfo=" + fulfilledOrderInfo +
+                "fulfilledOrderInfo=" + fulfilledOrderInfo +
                 ", instant=" + instant +
                 ", initialQuantity=" + initialQuantity +
                 ", remainingQuantity=" + remainingQuantity +
                 ", price=" + pricePerItem +
+                ", id=" + id +
                 '}';
     }
 }

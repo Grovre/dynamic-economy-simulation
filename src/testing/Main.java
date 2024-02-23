@@ -4,6 +4,7 @@ import github.grovre.economics.Economy;
 import github.grovre.economics.markets.MarketProduct;
 import github.grovre.economics.markets.transactions.BuyOrder;
 import github.grovre.economics.markets.transactions.SellOrder;
+import github.grovre.economics.markets.transactions.Transaction;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -40,20 +41,16 @@ public class Main {
             System.out.println("Latest orders:");
             var sb = new StringBuilder();
             for (var o : Stream.concat(market.getActiveBuyOrders().stream(), market.getActiveSellOrders().stream()).toList()) {
-                if (o instanceof BuyOrder) {
-                    sb.append("Buy order");
-                } else if (o instanceof SellOrder) {
-                    sb.append("Sell order");
-                } else {
-                    throw new RuntimeException();
-                }
 
-                sb.append(" { price per item: ").append(o.getPricePerItem())
+                sb.append(o.getOrderType())
+                        .append(" { price per item: ")
+                        .append(o.getPricePerItem())
                         .append(", remaining quantity: ")
                         .append(o.getRemainingQuantity())
                         .append(", order placement instant: ")
                         .append(o.getInstant())
-                        .append(" }");
+                        .append(" }\n\t")
+                        .append(String.join(", ", o.getTransactions().stream().map(Transaction::toString).toList()));
 
                 sb.append('\n');
             }

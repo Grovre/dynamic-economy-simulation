@@ -20,4 +20,14 @@ public record Transaction(BuyOrder buyingOrder, SellOrder sellingOrder, int quan
     public Transaction(BuyOrder buyingOrder, SellOrder sellingOrder, int quantityPurchased, double pricePerItem, Instant when) {
         this(buyingOrder, sellingOrder, quantityPurchased, pricePerItem, when, null);
     }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "quantityPurchased=" + quantityPurchased +
+                ", pricePerItem=" + pricePerItem +
+                ", when=" + when +
+                ", id=" + id +
+                '}';
+    }
 }

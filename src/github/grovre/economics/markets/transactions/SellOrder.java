@@ -12,4 +12,9 @@ public class SellOrder extends Order {
     public SellOrder(double price, int initialQuantity, Instant instant) {
         super(price, initialQuantity, instant);
     }
+
+    @Override
+    public String getOrderType() {
+        return "Sell Order";
+    }
 }
