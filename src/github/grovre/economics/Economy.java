@@ -19,11 +19,29 @@ public class Economy {
             this.markets.put(m.getProduct(), m);
     }
 
+    public Economy(MarketProduct... products) {
+        this();
+        for (var p : products)
+            this.markets.put(p, new Market(p));
+    }
+
+    public Economy(String... products) {
+        this();
+        for (var p : products) {
+            var product = new MarketProduct(p);
+            this.markets.put(product, new Market(product));
+        }
+    }
+
     public Market getOrCreateMarket(MarketProduct product) {
         return markets.computeIfAbsent(product, Market::new);
     }
 
     public Optional<Market> getMarket(MarketProduct product) {
         return Optional.ofNullable(markets.get(product));
+    }
+
+    public Set<MarketProduct> getMarkets() {
+        return markets.keySet();
     }
 }
