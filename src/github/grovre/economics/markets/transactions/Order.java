@@ -6,16 +6,14 @@ import java.util.*;
 public abstract class Order implements Comparable<Order> {
 
     private final UUID id;
-    private FulfilledOrderInfo fulfilledOrderInfo;
     private final Instant instant;
     private final int initialQuantity;
     private int remainingQuantity;
     private final double pricePerItem;
     private final ArrayList<Transaction> transactions;
 
-    public Order(double pricePerItem, int initialQuantity, Instant instant, UUID id) {
+    protected Order(double pricePerItem, int initialQuantity, Instant instant, UUID id) {
         this.id = id;
-        this.fulfilledOrderInfo = null;
         this.instant = instant;
         this.initialQuantity = initialQuantity;
         this.remainingQuantity = initialQuantity;
@@ -23,7 +21,7 @@ public abstract class Order implements Comparable<Order> {
         this.transactions = new ArrayList<>();
     }
 
-    public Order(double pricePerItem, int initialQuantity, Instant instant) {
+    protected Order(double pricePerItem, int initialQuantity, Instant instant) {
         this(pricePerItem, initialQuantity, instant, UUID.randomUUID());
     }
 
@@ -33,9 +31,6 @@ public abstract class Order implements Comparable<Order> {
                     ("Can't fulfill an order with quantity greater than what's asked for");
 
         remainingQuantity -= quantity;
-
-        if (remainingQuantity == 0)
-            this.fulfilledOrderInfo = new FulfilledOrderInfo(when);
     }
 
     public Transaction fulfill(Order other, Instant when) {
@@ -49,12 +44,6 @@ public abstract class Order implements Comparable<Order> {
 
         assert remainingQuantity >= 0;
         assert other.remainingQuantity >= 0;
-
-        if (remainingQuantity == 0)
-            fulfilledOrderInfo = new FulfilledOrderInfo(when);
-
-        if (other.remainingQuantity == 0)
-            other.fulfilledOrderInfo = new FulfilledOrderInfo(when);
 
         BuyOrder buyOrder;
         SellOrder sellOrder;
@@ -79,26 +68,8 @@ public abstract class Order implements Comparable<Order> {
     }
 
     public boolean isFulfilled() {
-         if (fulfilledOrderInfo == null)
-             return false;
-
-         assert remainingQuantity == 0
-                 : "invalid remaining quantity";
-         return true;
-    }
-
-    public Optional<FulfilledOrderInfo> getFulfilledOrderInfo() {
-        var orderInfo = Optional.ofNullable(fulfilledOrderInfo);
-
-        if (orderInfo.isEmpty()) {
-            assert !isFulfilled() && remainingQuantity > 0
-                    : "returning non null fulfilled order info despite not being fulfilled";
-        } else {
-            assert isFulfilled() && remainingQuantity == 0
-                    : "returning null fulfilled order despite being fulfilled";
-        }
-
-        return orderInfo;
+        assert remainingQuantity >= 0;
+        return remainingQuantity == 0;
     }
 
     public Instant getInstant() {
@@ -145,8 +116,7 @@ public abstract class Order implements Comparable<Order> {
     @Override
     public String toString() {
         return "Order{" +
-                "fulfilledOrderInfo=" + fulfilledOrderInfo +
-                ", instant=" + instant +
+                "instant=" + instant +
                 ", initialQuantity=" + initialQuantity +
                 ", remainingQuantity=" + remainingQuantity +
                 ", price=" + pricePerItem +

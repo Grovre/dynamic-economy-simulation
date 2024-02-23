@@ -58,6 +58,7 @@ public class Market {
                 fulfilledOrders.add(nextBuyOrder);
                 activeBuyOrders.remove(nextBuyOrder);
             }
+
             if (matchedSellOrder.isFulfilled()) {
                 fulfilledOrders.add(matchedSellOrder);
                 activeSellOrders.remove(matchedSellOrder);

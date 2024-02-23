@@ -49,6 +49,8 @@ public class Main {
                         .append(o.getRemainingQuantity())
                         .append(", order placement instant: ")
                         .append(o.getInstant())
+                        .append(", id: ")
+                        .append(o.getId())
                         .append(" }\n\t")
                         .append(String.join(", ", o.getTransactions().stream().map(Transaction::toString).toList()));
 
