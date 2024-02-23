@@ -1,4 +1,4 @@
-package testing;
+package testing.manual;
 
 import github.grovre.economics.Economy;
 import github.grovre.economics.markets.MarketProduct;

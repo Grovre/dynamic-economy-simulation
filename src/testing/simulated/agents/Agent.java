@@ -1,4 +1,4 @@
-package testing.agents;
+package testing.simulated.agents;
 
 import java.util.UUID;
 

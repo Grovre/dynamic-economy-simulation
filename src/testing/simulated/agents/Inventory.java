@@ -1,4 +1,4 @@
-package testing.agents;
+package testing.simulated.agents;
 
 import github.grovre.economics.markets.MarketProduct;
 

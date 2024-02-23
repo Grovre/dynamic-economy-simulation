@@ -3,7 +3,6 @@ package github.grovre.economics.markets;
 import github.grovre.economics.markets.transactions.BuyOrder;
 import github.grovre.economics.markets.transactions.Order;
 import github.grovre.economics.markets.transactions.SellOrder;
-import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ public class MarketHistory {
         return closedOrders;
     }
 
-    public static Stream<Order> ordersBetween(Stream<Order> orders, @NotNull Instant i1, @NotNull Instant i2) {
+    public static Stream<Order> ordersBetween(Stream<Order> orders, Instant i1, Instant i2) {
         Instant begin;
         Instant end;
         if (i1.isBefore(i2)) {
