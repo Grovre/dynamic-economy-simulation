@@ -12,13 +12,13 @@ public class Market {
     private final MarketProduct product;
     private final List<BuyOrder> activeBuyOrders;
     private final List<SellOrder> activeSellOrders;
-    private final List<Order> closedOrders;
+    private final MarketHistory history;
 
     public Market(MarketProduct product) {
         this.product = product;
         activeBuyOrders = new ArrayList<>();
         activeSellOrders = new ArrayList<>();
-        closedOrders = new ArrayList<>();
+        this.history = new MarketHistory();
     }
 
     public BuyOrder placeBuyOrder(int quantity, double maximumPrice) {
@@ -67,7 +67,7 @@ public class Market {
             }
         }
 
-        closedOrders.addAll(fulfilledOrders);
+        history.getClosedOrders().addAll(fulfilledOrders);
         return fulfilledOrders;
     }
 
