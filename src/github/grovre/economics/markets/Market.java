@@ -5,18 +5,19 @@ import github.grovre.economics.markets.transactions.OrderType;
 
 import java.time.Instant;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class Market {
 
     private final MarketProduct product;
-    private final List<Order> activeBuyOrders;
-    private final List<Order> activeSellOrders;
+    private final PriorityQueue<Order> activeBuyOrders;
+    private final PriorityQueue<Order> activeSellOrders;
     private final MarketHistory history;
 
     public Market(MarketProduct product) {
         this.product = product;
-        activeBuyOrders = new ArrayList<>();
-        activeSellOrders = new ArrayList<>();
+        activeBuyOrders = new PriorityQueue<>(new LimitOrderComparator.ForBuyOrders());
+        activeSellOrders = new PriorityQueue<>(new LimitOrderComparator.ForSellOrders());
         this.history = new MarketHistory();
     }
     
@@ -43,17 +44,12 @@ public class Market {
         if (activeBuyOrders.isEmpty() || activeSellOrders.isEmpty())
             return fulfilledOrders;
 
-        activeBuyOrders.sort(Comparator.comparing(Order::getPricePerItem)
-                .reversed()
-                .thenComparing(Order::getInstant)
-                .reversed());
-        activeSellOrders.sort(Comparator.comparing(Order::getPricePerItem)
-                .thenComparing(Order::getInstant)
-                .reversed());
-
         while (!activeBuyOrders.isEmpty() && !activeSellOrders.isEmpty()) {
-            var nextBuyOrder = activeBuyOrders.getLast();
-            var matchedSellOrder = activeSellOrders.getLast();
+            var nextBuyOrder = activeBuyOrders.poll();
+            var matchedSellOrder = activeSellOrders.poll();
+            
+            assert nextBuyOrder != null;
+            assert matchedSellOrder != null;
 
             if (matchedSellOrder.getPricePerItem() > nextBuyOrder.getPricePerItem())
                 break;
@@ -62,12 +58,10 @@ public class Market {
 
             if (nextBuyOrder.isFulfilled()) {
                 fulfilledOrders.add(nextBuyOrder);
-                activeBuyOrders.remove(nextBuyOrder);
             }
 
             if (matchedSellOrder.isFulfilled()) {
                 fulfilledOrders.add(matchedSellOrder);
-                activeSellOrders.remove(matchedSellOrder);
             }
         }
 
@@ -79,11 +73,11 @@ public class Market {
         return product;
     }
 
-    public List<Order> getActiveBuyOrders() {
-        return Collections.unmodifiableList(activeBuyOrders);
+    public Stream<Order> getActiveBuyOrders() {
+        return activeBuyOrders.stream();
     }
 
-    public List<Order> getActiveSellOrders() {
-        return Collections.unmodifiableList(activeSellOrders);
+    public Stream<Order> getActiveSellOrders() {
+        return activeSellOrders.stream();
     }
 }

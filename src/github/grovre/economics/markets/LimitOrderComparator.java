@@ -24,7 +24,7 @@ public class LimitOrderComparator {
         return highToLow ? -cmpTxTy : cmpTxTy;
     }
 
-    public class ForBuyOrders implements Comparator<Order> {
+    public static class ForBuyOrders implements Comparator<Order> {
         @Override
         public int compare(Order x, Order y) {
             if (x == y)
@@ -38,7 +38,7 @@ public class LimitOrderComparator {
         }
     }
     
-    public class ForSellOrders implements Comparator<Order> {
+    public static class ForSellOrders implements Comparator<Order> {
         @Override
         public int compare(Order x, Order y) {
             if (x == y)
