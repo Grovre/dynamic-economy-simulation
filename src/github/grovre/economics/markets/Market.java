@@ -45,8 +45,8 @@ public class Market {
             return fulfilledOrders;
 
         while (!activeBuyOrders.isEmpty() && !activeSellOrders.isEmpty()) {
-            var nextBuyOrder = activeBuyOrders.poll();
-            var matchedSellOrder = activeSellOrders.poll();
+            var nextBuyOrder = activeBuyOrders.peek();
+            var matchedSellOrder = activeSellOrders.peek();
             
             assert nextBuyOrder != null;
             assert matchedSellOrder != null;
@@ -58,10 +58,12 @@ public class Market {
 
             if (nextBuyOrder.isFulfilled()) {
                 fulfilledOrders.add(nextBuyOrder);
+                activeBuyOrders.poll();
             }
 
             if (matchedSellOrder.isFulfilled()) {
                 fulfilledOrders.add(matchedSellOrder);
+                activeSellOrders.poll();
             }
         }
 
