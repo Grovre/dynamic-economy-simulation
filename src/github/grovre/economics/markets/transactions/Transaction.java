@@ -34,8 +34,6 @@ public record Transaction(Order buyingOrder, Order sellingOrder, int quantityPur
         return "Transaction{" +
                 "quantityPurchased=" + quantityPurchased +
                 ", pricePerItem=" + pricePerItem +
-                ", when=" + when +
-                ", id=" + id +
                 '}';
     }
 }

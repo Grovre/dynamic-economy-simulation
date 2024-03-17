@@ -33,11 +33,11 @@ public class Order implements Comparable<Order> {
 
     public Transaction fulfill(Order other, Instant when) {
         if (this == other) {
-            throw new RuntimeException("An order cannot fulfill itself");
+            throw new IllegalArgumentException("An order cannot fulfill itself");
         }
         
         if (this.getOrderType() == other.getOrderType()) {
-            throw new RuntimeException("An order cannot fulfill another order of the same type");
+            throw new IllegalArgumentException("An order cannot fulfill another order of the same type");
         }
 
         var maxFulfilledQuantity = Math.min(remainingQuantity, other.remainingQuantity);
