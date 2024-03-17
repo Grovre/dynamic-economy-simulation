@@ -119,11 +119,9 @@ public class Order implements Comparable<Order> {
     @Override
     public String toString() {
         return getOrderType() + "{" +
-                "instant=" + instant +
-                ", initialQuantity=" + initialQuantity +
+                "initialQuantity=" + initialQuantity +
                 ", remainingQuantity=" + remainingQuantity +
                 ", price=" + pricePerItem +
-                ", id=" + id +
                 '}';
     }
 }
