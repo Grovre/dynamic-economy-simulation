@@ -1,8 +1,7 @@
 package github.grovre.economics.markets;
 
-import github.grovre.economics.markets.transactions.BuyOrder;
 import github.grovre.economics.markets.transactions.Order;
-import github.grovre.economics.markets.transactions.SellOrder;
+import github.grovre.economics.markets.transactions.OrderType;
 
 import java.time.Instant;
 import java.util.*;
@@ -10,8 +9,8 @@ import java.util.*;
 public class Market {
 
     private final MarketProduct product;
-    private final List<BuyOrder> activeBuyOrders;
-    private final List<SellOrder> activeSellOrders;
+    private final List<Order> activeBuyOrders;
+    private final List<Order> activeSellOrders;
     private final MarketHistory history;
 
     public Market(MarketProduct product) {
@@ -20,17 +19,22 @@ public class Market {
         activeSellOrders = new ArrayList<>();
         this.history = new MarketHistory();
     }
-
-    public BuyOrder placeBuyOrder(int quantity, double maximumPrice) {
-        var order = new BuyOrder(maximumPrice, quantity, Instant.now());
-        activeBuyOrders.add(order);
-        return order;
+    
+    public void placeOrder(Order order) {
+        switch (order.getOrderType()) {
+            case BUY -> activeBuyOrders.add(order);
+            case SELL -> activeSellOrders.add(order);
+            default -> throw new IllegalArgumentException("Invalid order type");
+        }
     }
-
-    public SellOrder placeSellOrder(int quantity, double sellPrice) {
-        var order = new SellOrder(sellPrice, quantity, Instant.now());
-        activeSellOrders.add(order);
-        return order;
+    
+    public void placeOrder(OrderType orderType, double pricePerItem, int quantity, Instant instant) {
+        var order = new Order(orderType, pricePerItem, quantity, instant);
+        switch (orderType) {
+            case BUY -> activeBuyOrders.add(order);
+            case SELL -> activeSellOrders.add(order);
+            default -> throw new IllegalArgumentException("Invalid order type");
+        }
     }
 
     public List<Order> updateMarketOrders() {
@@ -75,11 +79,11 @@ public class Market {
         return product;
     }
 
-    public List<BuyOrder> getActiveBuyOrders() {
+    public List<Order> getActiveBuyOrders() {
         return Collections.unmodifiableList(activeBuyOrders);
     }
 
-    public List<SellOrder> getActiveSellOrders() {
+    public List<Order> getActiveSellOrders() {
         return Collections.unmodifiableList(activeSellOrders);
     }
 }

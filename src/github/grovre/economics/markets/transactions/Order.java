@@ -3,16 +3,22 @@ package github.grovre.economics.markets.transactions;
 import java.time.Instant;
 import java.util.*;
 
-public abstract class Order implements Comparable<Order> {
+public class Order implements Comparable<Order> {
 
     private final UUID id;
     private final Instant instant;
+    private final OrderType orderType;
     private final int initialQuantity;
     private int remainingQuantity;
     private final double pricePerItem;
     private final ArrayList<Transaction> transactions;
 
-    protected Order(double pricePerItem, int initialQuantity, Instant instant, UUID id) {
+    public Order(OrderType orderType, double pricePerItem, int initialQuantity, Instant instant, UUID id) {
+        if (pricePerItem < 0 || initialQuantity < 0) {
+            throw new IllegalArgumentException("Price and quantity must be non-negative");
+        }
+        
+        this.orderType = orderType;
         this.id = id;
         this.instant = instant;
         this.initialQuantity = initialQuantity;
@@ -21,31 +27,36 @@ public abstract class Order implements Comparable<Order> {
         this.transactions = new ArrayList<>();
     }
 
-    protected Order(double pricePerItem, int initialQuantity, Instant instant) {
-        this(pricePerItem, initialQuantity, instant, UUID.randomUUID());
+    public Order(OrderType orderType, double pricePerItem, int initialQuantity, Instant instant) {
+        this(orderType, pricePerItem, initialQuantity, instant, UUID.randomUUID());
     }
 
     public Transaction fulfill(Order other, Instant when) {
         if (this == other) {
             throw new RuntimeException("An order cannot fulfill itself");
         }
+        
+        if (this.getOrderType() == other.getOrderType()) {
+            throw new RuntimeException("An order cannot fulfill another order of the same type");
+        }
 
         var maxFulfilledQuantity = Math.min(remainingQuantity, other.remainingQuantity);
         remainingQuantity -= maxFulfilledQuantity;
         other.remainingQuantity -= maxFulfilledQuantity;
 
-        if (remainingQuantity < 0 || other.remainingQuantity < 0)
+        if (remainingQuantity < 0 || other.remainingQuantity < 0) {
             throw new ArithmeticException("Remaining quantity of an order cannot go below 0");
+        }
 
-        BuyOrder buyOrder;
-        SellOrder sellOrder;
+        Order buyOrder;
+        Order sellOrder;
 
-        if (this instanceof BuyOrder) {
-            buyOrder = (BuyOrder) this;
-            sellOrder = (SellOrder) other;
+        if (this.orderType == OrderType.BUY) {
+            buyOrder = this;
+            sellOrder = other;
         } else {
-            buyOrder = (BuyOrder) other;
-            sellOrder = (SellOrder) this;
+            buyOrder = other;
+            sellOrder = this;
         }
 
         var transaction = new Transaction(buyOrder, sellOrder, maxFulfilledQuantity, sellOrder.getPricePerItem(), when);
@@ -101,13 +112,13 @@ public abstract class Order implements Comparable<Order> {
         return instant.compareTo(o.instant);
     }
 
-    public String getOrderType() {
-        return "Order";
+    public OrderType getOrderType() {
+        return orderType;
     }
 
     @Override
     public String toString() {
-        return "Order{" +
+        return getOrderType() + "{" +
                 "instant=" + instant +
                 ", initialQuantity=" + initialQuantity +
                 ", remainingQuantity=" + remainingQuantity +

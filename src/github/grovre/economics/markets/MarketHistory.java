@@ -1,8 +1,7 @@
 package github.grovre.economics.markets;
 
-import github.grovre.economics.markets.transactions.BuyOrder;
 import github.grovre.economics.markets.transactions.Order;
-import github.grovre.economics.markets.transactions.SellOrder;
+import github.grovre.economics.markets.transactions.OrderType;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -34,14 +33,14 @@ public class MarketHistory {
     }
 
     public static double averageBuyOrderPrice(Stream<Order> orders) {
-        return orders.filter(BuyOrder.class::isInstance)
+        return orders.filter(o -> o.getOrderType() == OrderType.BUY)
                 .mapToDouble(Order::getPricePerItem)
                 .average()
                 .orElse(0);
     }
 
     public static double averageSellOrderPrice(Stream<Order> orders) {
-        return orders.filter(SellOrder.class::isInstance)
+        return orders.filter(o -> o.getOrderType() == OrderType.SELL)
                 .mapToDouble(Order::getPricePerItem)
                 .average()
                 .orElse(0);
